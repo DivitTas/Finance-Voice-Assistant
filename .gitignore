@@ -1,3 +1,55 @@
+# Dependencies
+node_modules/
+venv/
+env/
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Build outputs
+dist/
+build/
+*.egg-info/
+__pycache__/
+*.pyc
+*.pyo
+
+# Logs
+*.log
+logs/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Audio files (for voice banking)
+*.wav
+*.mp3
+*.m4a
+
+# Sensitive data
+secrets.json
+credentials.json
+config.local.js
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -205,3 +257,16 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+#flutter stuff
+
+.dart_tool/
+.packages
+.pub/
+build/
+android/.gradle/
+android/app/build/
+
+# IntelliJ/Android Studio
+.idea/
+*.iml
