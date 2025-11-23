@@ -12,8 +12,12 @@ from plaid.model.item_public_token_exchange_request import ItemPublicTokenExchan
 from plaid.model.accounts_get_request import AccountsGetRequest
 from plaid.model.transactions_get_request import TransactionsGetRequest
 from datetime import datetime, timedelta, date
-
-
+from fastapi import UploadFile, File, HTTPException
+import tempfile
+import subprocess
+import os
+from pathlib import Path
+import uuid 
 import os
 from dotenv import load_dotenv
 
@@ -31,6 +35,9 @@ app.add_middleware(
 )
 
 
+WHISPER_BIN = r"C:\Users\Divit\whisper.cpp\build\bin\Release\whisper-cli.exe"
+WHISPER_MODEL = r"C:\Users\Divit\whisper.cpp\models\ggml-base.en.bin"  ##Whisper running on my pc - change as needed
+
 PLAID_CLIENT_ID = os.getenv("PLAID_CLIENT_ID")
 PLAID_SECRET = os.getenv("PLAID_SECRET")
 PLAID_ENV = "sandbox"
@@ -47,6 +54,40 @@ configuration = Configuration(
 
 api_client = ApiClient(configuration)
 client = plaid_api.PlaidApi(api_client)
+
+
+@app.post("/transcribe")
+async def transcribe_audio(file: UploadFile = File(...)):
+    # Save uploaded temp file
+    temp_id = str(uuid.uuid4())
+    input_path = f"temp_{temp_id}.wav"
+    output_path = f"temp_{temp_id}.wav.txt"
+
+    with open(input_path, "wb") as f:
+        f.write(await file.read())
+
+    # Run whisper-cli
+    cmd = [
+        WHISPER_BIN,
+        "-m", WHISPER_MODEL,
+        "-f", input_path,
+        "--output-txt"
+    ]
+
+    subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    # Read output
+    if not os.path.exists(output_path):
+        return {"error": "Transcription failed"}
+
+    with open(output_path, "r", encoding="utf-8") as f:
+        text = f.read()
+
+    # Cleanup
+    os.remove(input_path)
+    os.remove(output_path)
+
+    return {"text": text}
 
 
 @app.get("/")
