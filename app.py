@@ -113,3 +113,34 @@ def sandbox_public_token():
         return response.to_dict()
     except Exception as e:
         return {"error": str(e)}
+    
+
+@app.post("/check_balance")
+def check_balance(user_id: str):
+    # Placeholder implementation
+    #abstracted logic to get access token, using hardcoded pregenerated sandbox token just for demo
+    #access_token = get_access_token_for_user(user_id)
+
+    access_token = "access-sandbox-92ed2019-5945-4cf8-907f-2e1cb6bec1e1" #<< HARDCODED FOR DEMO ONLY
+    request = AccountsGetRequest(access_token=access_token)
+    response = client.accounts_get(request)
+
+    # extract balances
+    accounts = response.to_dict()["accounts"]
+
+
+    savings_accounts = [  #Check balance returns only savings accounts
+    {
+        "name": acc["name"],
+        "current": acc["balances"]["current"],
+        "available": acc["balances"]["available"],
+        "official_name": acc.get("official_name"),
+        "account_id": acc["account_id"],
+    }
+    for acc in accounts 
+    if acc["type"] == "depository" and acc.get("subtype") == "savings"
+    ]
+
+    return {"savings_accounts": savings_accounts}
+    
+
