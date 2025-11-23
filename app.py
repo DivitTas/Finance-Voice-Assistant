@@ -33,6 +33,7 @@ app.add_middleware(
 PLAID_CLIENT_ID = os.getenv("PLAID_CLIENT_ID")
 PLAID_SECRET = os.getenv("PLAID_SECRET")
 PLAID_ENV = "sandbox"
+ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
 configuration = Configuration(
     host="https://sandbox.plaid.com",
@@ -121,7 +122,7 @@ def check_balance(user_id: str):
     #abstracted logic to get access token, using hardcoded pregenerated sandbox token just for demo
     #access_token = get_access_token_for_user(user_id)
 
-    access_token = "access-sandbox-92ed2019-5945-4cf8-907f-2e1cb6bec1e1" #<< HARDCODED FOR DEMO ONLY
+    access_token = ACCESS_TOKEN
     request = AccountsGetRequest(access_token=access_token)
     response = client.accounts_get(request)
 
