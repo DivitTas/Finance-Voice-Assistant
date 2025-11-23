@@ -8,7 +8,10 @@ from plaid.model.country_code import CountryCode
 from plaid.configuration import Configuration
 from plaid.api_client import ApiClient
 from plaid.model.sandbox_public_token_create_request import SandboxPublicTokenCreateRequest
-from plaid.model.products import Products
+from plaid.model.item_public_token_exchange_request import ItemPublicTokenExchangeRequest
+from plaid.model.accounts_get_request import AccountsGetRequest
+from plaid.model.transactions_sync_request import TransactionsSyncRequest
+
 
 import os
 from dotenv import load_dotenv
